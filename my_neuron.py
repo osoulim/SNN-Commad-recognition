@@ -5,7 +5,7 @@ import parameters
 
 class MyNeuron(Neuron):
 
-	def __init__(self):
+	def __init__(self, neuron_id, layer_id):
 		self.threshold = 4.16
 		self.tm = 24
 		self.current_v = 0
@@ -20,6 +20,8 @@ class MyNeuron(Neuron):
 		self.r_max = 0.10
 		self.r_d = 0.00025
 		self.r_current = 0
+		self._id = neuron_id
+		self.layer_id = layer_id
 	
 	def spike(self):
 		self.current_v = 0
@@ -39,8 +41,7 @@ class MyNeuron(Neuron):
 				synapse.STDP(self, neuron)
 				synapse.delay_plasticity(self, neuron)
 			app.append((self.spike_time+synapse.delay, synapse.weight,
-					 neuron.layer, neuron.z, neuron.x, neuron.y))
-
+					 neuron.layer_id, neuron._id))
 
 		return app
 
