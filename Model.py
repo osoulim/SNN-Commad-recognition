@@ -43,3 +43,6 @@ class Model:
         for synapse in self.synapses.values():
             synapse.reset()
 
+    def disable_learning(self):
+        for synapse in self.synapses.values():
+            synapse.disable_learing()

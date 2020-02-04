@@ -15,7 +15,9 @@ class MySynapses(Synapse):
 		self.number_of_spikes = 0
 		self.last_update_time = -1
 		self.cnt = 0 
+		self.is_freezed = False
 		# self.feature = feature
+
 
 		#STDP parameters
 		self.tau_pre = 5.0 
@@ -43,6 +45,10 @@ class MySynapses(Synapse):
 		self.nspike_list = [self.target/self.Hwindow for i in range(self.Hwindow)]
 		self.observe = self.target
 
+
+	def disable_learing(self):
+		self.is_freezed = True
+
 	def add_connection(self, pre_neuron, post_neuron):
 		self.pre_neurons.append(pre_neuron)
 		self.post_neurons.append(post_neuron)
@@ -52,7 +58,9 @@ class MySynapses(Synapse):
 		post_neuron.back_synapses.append(self)
 
 	def STDP(self, pre_neuron, post_neuron ):
-		
+		if self.is_freezed:
+			return 0
+
 		if pre_neuron.spike_time == -1:
 			self.weight = max(self.wmin, self.weight-self.eps_weight_decay)
 			return 0
@@ -103,9 +111,13 @@ class MySynapses(Synapse):
 		self.nspike_list.append(self.number_of_spikes)
 		self.observe+=self.number_of_spikes
 		learning_rate = 1/math.pow(self.cnt, 0.46)
-		self.delay = np.clip(self.delay+learning_rate*self.ddelay, self.dmin, self.dmax)
+		if not self.is_freezed:
+			self.delay = np.clip(self.delay+learning_rate*self.ddelay, self.dmin, self.dmax)
+		
 		self.observe-=self.nspike_list[0]
 		self.nspike_list = self.nspike_list[1:]
-		self.homeostasis()
+		if not self.is_freezed:
+			self.homeostasis()
+		
 		self.number_of_spikes = 0
 		self.ddelay = 0
