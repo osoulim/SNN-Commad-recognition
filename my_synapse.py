@@ -3,15 +3,15 @@ import math
 from Synapse import Synapse
 import parameters
 
-class MySynapses(Synapse):
+class MySynapse(Synapse):
 
 	def __init__(self, pre_neurons = list(), post_neurons = list()):
-		super().__init__(pre_neurons, post_neurons)
+		super().__init__()
 		homeostasis_scale = 4/parameters.nDots
 		learning_scale = 2/parameters.nDots
 
 		self.weight = np.random.normal(0.95, 0.05)
-		self.delay = np.random.normal(50, 0.02)
+		self.delay = np.random.normal(25, 0.02)
 		self.number_of_spikes = 0
 		self.last_update_time = -1
 		self.cnt = 0 
