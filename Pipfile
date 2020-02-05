@@ -10,6 +10,7 @@ scipy = "*"
 cython = "*"
 pandas = "*"
 numpy = "*"
+thorns = "*"
 
 [requires]
 python_version = "3.6"
